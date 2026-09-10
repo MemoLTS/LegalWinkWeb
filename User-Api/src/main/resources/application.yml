@@ -8,5 +8,5 @@ spring:
         name: servicio-usuarios
     datasource:
         url: jdbc:postgresql://localhost:5432/db_usuarios
-        username: postgres
-        password: tu_password/media/Compartido/Clases/Application
+        username: root
+        password:

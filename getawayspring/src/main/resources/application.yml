@@ -1,0 +1,22 @@
+spring:
+    application:
+        name: getawayspring
+
+    cloud:
+        gateway:
+            server:
+                webflux:
+                    routes:
+                        -   id: ms-usuarios
+                            uri: http://localhost:8081
+                            predicates:
+                            - Path=/api/v1/usuarios,/api/v1/usuarios/**
+
+                        # Plantilla para incorporar otra API:
+                        # - id: ms-otra-api
+                        #   uri: http://localhost:8082
+                        #   predicates:
+                        #       - Path=/api/v1/otra-api,/api/v1/otra-api/**
+
+server:
+    port: 8080
