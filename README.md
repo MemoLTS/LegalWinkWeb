@@ -1,4 +1,4 @@
-# LegalWink_Web
+# LegalWinkWeb
 Proyecto academico de pagina web con Titulo: LegalWink 😉
 Pagina web de series con usuarios, catalogo, entre otros y multimedia que conviertida en texto
 
