@@ -69,7 +69,7 @@ player.on('init', (info) => {
     timeDisplay.textContent = `00:00 / ${formatTime(info.duration || 0)}`;
 });
 
-// ── Bucle de actualización de la barra de progreso ──────────────
+// Bucle de actualización de la barra de progreso 
 function tick() {
     if (!isSeeking && player.duration) {
         const current = player.getMasterClock();
@@ -80,14 +80,14 @@ function tick() {
 }
 requestAnimationFrame(tick);
 
-// ── Controles: Play / Pausa ──────────────────────────────────────
+// Controles: Play / Pausa
 function togglePlay() {
     player.togglePlay();
 }
 playPauseBtn.addEventListener('click', togglePlay);
 overlay.addEventListener('click', togglePlay);
 
-// ── Controles: barra de progreso (seek) ──────────────────────────
+//Controles: barra de progreso (seek)
 progressBar.addEventListener('mousedown', () => { isSeeking = true; });
 progressBar.addEventListener('touchstart', () => { isSeeking = true; });
 
@@ -96,12 +96,12 @@ progressBar.addEventListener('change', () => {
     isSeeking = false;
 });
 
-// ── Controles: volumen ────────────────────────────────────────────
+//Controles: volumen
 volumeBar.addEventListener('input', (e) => {
     player.setVolume(parseFloat(e.target.value));
 });
 
-// ── Controles: pantalla completa ──────────────────────────────────
+// Controles: pantalla completa
 fullscreenBtn.addEventListener('click', () => {
     if (!document.fullscreenElement) {
         container.requestFullscreen();
@@ -110,7 +110,7 @@ fullscreenBtn.addEventListener('click', () => {
     }
 });
 
-// ── Atajos de teclado básicos ─────────────────────────────────────
+//Atajos de teclado básicos
 document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
         e.preventDefault();
