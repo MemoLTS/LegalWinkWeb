@@ -63,11 +63,20 @@ body {
 }
 
 .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     color: var(--text);
     font-size: 1.25rem;
     font-weight: 800;
     letter-spacing: 0.02em;
     text-decoration: none;
+}
+
+.brand img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
 }
 
 .top-menu nav {
@@ -225,6 +234,21 @@ body {
     height: auto !important;
     max-height: 75vh;
     object-fit: contain;
+}
+
+.video-page .video-container:fullscreen {
+    display: grid;
+    place-items: center;
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    min-height: 0;
+    border-radius: 0;
+}
+
+.video-page .video-container:fullscreen .ascii-canvas {
+    width: 100%;
+    max-height: 100vh;
 }
 
 .video-page .video-container .ascii-player {

@@ -1,6 +1,5 @@
 const playerContainer = document.getElementById("player-container");
 const videoTitle = document.getElementById("video-title");
-const statusElement = document.getElementById("status");
 const previousButton = document.getElementById("previous-video");
 const nextButton = document.getElementById("next-video");
 const positionElement = document.getElementById("video-position");
@@ -65,8 +64,10 @@ async function loadVideo(numero) {
         playerContainer.classList.remove("ascf-loading");
     } catch (err) {
         playerContainer.classList.remove("ascf-loading");
-        const statusEl = playerContainer.querySelector(".status") || statusElement;
-        statusEl.textContent = "Agrega el archivo .ascf para este contenido";
+        const currentStatus = playerContainer.querySelector(".status");
+        if (currentStatus) {
+            currentStatus.textContent = "Agrega el archivo .ascf para este contenido";
+        }
     }
 }
 
@@ -82,12 +83,37 @@ nextButton.addEventListener("click", () => {
     }
 });
 
+function updateFullscreenButton() {
+    const isFullscreen = document.fullscreenElement === playerContainer;
+    fullscreenButton.innerHTML = `
+        <i class="bi bi-${isFullscreen ? "fullscreen-exit" : "fullscreen"}" aria-hidden="true"></i>
+        ${isFullscreen ? "Salir de pantalla completa" : "Pantalla completa"}
+    `;
+    fullscreenButton.setAttribute(
+        "aria-label",
+        isFullscreen ? "Salir de pantalla completa" : "Activar pantalla completa"
+    );
+}
+
 fullscreenButton.addEventListener("click", async () => {
-    if (!document.fullscreenElement) {
-        await playerContainer.requestFullscreen();
-    } else {
-        await document.exitFullscreen();
+    try {
+        if (!document.fullscreenElement) {
+            if (!playerContainer.requestFullscreen) {
+                throw new Error("La pantalla completa no está disponible en este navegador");
+            }
+            await playerContainer.requestFullscreen();
+        } else {
+            await document.exitFullscreen();
+        }
+    } catch (error) {
+        const currentStatus = playerContainer.querySelector(".status");
+        if (currentStatus) {
+            currentStatus.textContent = error.message;
+        }
     }
 });
+
+document.addEventListener("fullscreenchange", updateFullscreenButton);
+updateFullscreenButton();
 
 loadVideo(currentVideo);
