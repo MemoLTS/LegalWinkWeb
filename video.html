@@ -16,14 +16,21 @@
         <div class="loading-spinner" aria-hidden="true"></div>
     </div>
     <main class="video-page">
-        <a class="back-link" href="index.html">
-            <i class="bi bi-arrow-left" aria-hidden="true"></i>
-            Volver al catálogo
-        </a>
+        <div class="video-header">
+            <a class="back-link" href="index.html">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                Volver al catálogo
+            </a>
+            <button class="theme-toggle" type="button" aria-label="Activar modo claro" title="Activar modo claro">
+                <i class="bi bi-sun" aria-hidden="true"></i>
+            </button>
+        </div>
 
         <div class="video-container is-loading" id="player-container">
-            <video id="video-player" preload="metadata" controls playsinline></video>
-            <div id="status" class="status">Preparando video...</div>
+            <div class="status" id="status">Preparando video...</div>
+            <pre class="ascii-player"></pre>
+            <canvas class="ascii-canvas"></canvas>
+            <audio class="ascii-audio" preload="none"></audio>
         </div>
 
         <div class="video-info">
@@ -47,7 +54,11 @@
         </nav>
     </main>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+    <script src="js/asciline/codec.js"></script>
+    <script src="js/asciline/reader.js"></script>
     <script src="js/carga.js"></script>
+    <script src="js/theme.js"></script>
     <script src="js/video.js"></script>
 </body>
 </html>

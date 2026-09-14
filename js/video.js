@@ -1,4 +1,4 @@
-const videoPlayer = document.getElementById("video-player");
+const playerContainer = document.getElementById("player-container");
 const videoTitle = document.getElementById("video-title");
 const statusElement = document.getElementById("status");
 const previousButton = document.getElementById("previous-video");
@@ -9,8 +9,14 @@ const totalVideos = 44;
 const selectedVideo = Number(new URLSearchParams(window.location.search).get("contenido")) || 1;
 let currentVideo = Math.min(Math.max(selectedVideo, 1), totalVideos);
 
-function videoSource(numero) {
-    return `assets/video/video-${String(numero).padStart(2, "0")}.mp4`;
+let player = null;
+
+function ascfSource(numero) {
+    return `assets/videos/video-${String(numero).padStart(2, "0")}.ascf`;
+}
+
+function audioSource(numero) {
+    return `assets/videos/video-${String(numero).padStart(2, "0")}.mp3`;
 }
 
 function updateNavigation() {
@@ -19,23 +25,50 @@ function updateNavigation() {
     positionElement.textContent = `${currentVideo} / ${totalVideos}`;
 }
 
-function loadVideo(numero) {
-    currentVideo = Math.min(Math.max(numero, 1), totalVideos);
-    videoTitle.textContent = `Contenido ${String(currentVideo).padStart(2, "0")}`;
-    statusElement.textContent = "Preparando video...";
-    videoPlayer.src = videoSource(currentVideo);
-    videoPlayer.load();
-    updateNavigation();
-    window.history.replaceState({}, "", `video.html?contenido=${currentVideo}`);
+async function audioExists(url) {
+    try {
+        const res = await fetch(url, { method: "HEAD" });
+        return res.ok;
+    } catch {
+        return false;
+    }
 }
 
-videoPlayer.addEventListener("loadedmetadata", () => {
-    statusElement.textContent = "Listo para reproducir";
-});
+async function loadVideo(numero) {
+    currentVideo = Math.min(Math.max(numero, 1), totalVideos);
+    videoTitle.textContent = `Contenido ${String(currentVideo).padStart(2, "0")}`;
+    playerContainer.classList.add("ascf-loading");
+    updateNavigation();
+    window.history.replaceState({}, "", `video.html?contenido=${currentVideo}`);
 
-videoPlayer.addEventListener("error", () => {
-    statusElement.textContent = "Agrega el archivo de video para este contenido";
-});
+    if (player) {
+        player.stop();
+        player = null;
+    }
+
+    // Reset inner markup so AscilinePlayer starts with a clean container
+    playerContainer.innerHTML = `
+        <div class="status" id="status">Preparando video...</div>
+        <pre class="ascii-player"></pre>
+        <canvas class="ascii-canvas"></canvas>
+        <audio class="ascii-audio" preload="none"></audio>
+    `;
+
+    const ascfUrl = ascfSource(currentVideo);
+    const mp3Url = audioSource(currentVideo);
+    const hasAudio = await audioExists(mp3Url);
+
+    player = new AscilinePlayer(playerContainer, { loop: false });
+
+    try {
+        await player.play(ascfUrl, hasAudio ? mp3Url : null);
+        playerContainer.classList.remove("ascf-loading");
+    } catch (err) {
+        playerContainer.classList.remove("ascf-loading");
+        const statusEl = playerContainer.querySelector(".status") || statusElement;
+        statusEl.textContent = "Agrega el archivo .ascf para este contenido";
+    }
+}
 
 previousButton.addEventListener("click", () => {
     if (currentVideo > 1) {
@@ -51,7 +84,7 @@ nextButton.addEventListener("click", () => {
 
 fullscreenButton.addEventListener("click", async () => {
     if (!document.fullscreenElement) {
-        await videoPlayer.requestFullscreen();
+        await playerContainer.requestFullscreen();
     } else {
         await document.exitFullscreen();
     }
