@@ -227,6 +227,24 @@ body {
     object-fit: contain;
 }
 
+<<<<<<< HEAD
+=======
+.video-page .video-container:fullscreen {
+    display: grid;
+    place-items: center;
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    min-height: 0;
+    border-radius: 0;
+}
+
+.video-page .video-container:fullscreen .ascii-canvas {
+    width: 100%;
+    max-height: 100vh;
+}
+
+>>>>>>> 35a7648e800167e985219bad87b6ce1fe53bd166
 .video-page .video-container .ascii-player {
     white-space: pre;
     font-family: 'Courier New', Courier, monospace;
